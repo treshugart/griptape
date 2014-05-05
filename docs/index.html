@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css">
+    <script src="../bower_components/skate/src/skate.js"></script>
+    <script src="../bower_components/witness/src/witness.js"></script>
+    <script src="../src/griptape.js"></script>
+    <script>
+      griptape.scope({
+        pageTitle: 'Griptape',
+        todo: '',
+        todos: [{
+          name: 'Get milk',
+        }, {
+          name: 'Walk Rover'
+        }],
+        addTodo: function () {
+          this.todos.push({
+            name: this.todo
+          });
+          this.todo = '';
+        },
+        removeTodo: function (index) {
+          this.todos.splice(index, 1);
+        }
+      });
+    </script>
+
+    <title gt-text="pageTitle"></title>
+
+    <script type="text/html" id="gt-template-code">
+      <pre gt-trim>
+        <code gt-trim>{{content}}</code>
+      </pre>
+    </script>
+
+    <script type="text/html" id="gt-template-btn">
+      <button
+        gt-attr="{
+          'class': 'btn btn-' + (typeof type === 'undefined' ? 'default' : type),
+          'type': (typeof submit === 'undefined' ? 'button' : 'submit')
+        }"
+      >
+        {{content}}
+      </button>
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 gt-text="pageTitle"></h1>
+      <p>Griptape is an element-based templating framework.</p>
+
+      <textarea gt-template-replace gt-template="gt-template-code">
+        griptape.scope({
+          todo: '',
+          todos: ['Get milk', 'Walk dog'],
+          addTodo: function () {
+            this.todos.push({
+              name: this.todo
+            });
+            this.todo = '';
+          },
+          removeTodo: function (index) {
+            this.todos.splice(index, 1);
+          }
+        });
+      </textarea>
+
+      <textarea gt-template-replace gt-template="gt-template-code">
+        <h2>Todos</h2>
+        <p>
+          <input class="form-control" gt-value="todo">
+          <button gt-click="addTodo">Add todo</button>
+        </p>
+        <p gt-if="!todos.length">There is nothing to do.</p>
+        <ul gt-if="todos.length">
+          <li gt-each="todos">
+            <span gt-text="name"></span>
+            <button gt-click="$parent.removeTodo($index)">Remove</button>
+          </li>
+        </ul>
+      </textarea>
+
+      <div class="well">
+        <h2>Todos</h2>
+        <p>
+          <input class="form-control" gt-value="todo">
+          <span gt-template="gt-template-btn" gt-click="addTodo">Add todo</span>
+        </p>
+        <p gt-if="!todos.length">There is nothing to do.</p>
+        <ul gt-if="todos.length">
+          <li gt-each="todos">
+            <span gt-text="name"></span>
+            <span gt-template="gt-template-btn" gt-template-data="{ type: 'primary' }" gt-click="$parent.removeTodo($index)">Remove</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
